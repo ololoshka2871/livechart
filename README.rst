@@ -27,4 +27,4 @@ will plot just one.
 
     some_script | livechart
 
-Run ``livechart --help`` for all configuration options.
+Run ``echo {} | livechart --help`` for all configuration options.
