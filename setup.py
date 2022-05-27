@@ -17,6 +17,7 @@ setuptools.setup(
 	author_email="severyn.kozak@gmail.com",
 	entry_points={"console_scripts": ["livechart=livechart.script:run"]},
 	packages=setuptools.find_packages(),
-	install_requires=["matplotlib == 1.4.3"],
+	# also works with 2.2.5 # 1.5.3
+	install_requires=["matplotlib == 2.1.0"],
 	license="MIT"
 )
