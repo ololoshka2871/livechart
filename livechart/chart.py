@@ -103,11 +103,17 @@ def render_stdin(config):
 	# by it.
 	time_spent_rendering = 0
 
+	limit = config["limit"]
+
 	while line:
 		new_data = parse_json(line.rstrip("\n"))
 		if new_data is not None:
 			curr_time = time.time()
 			times.append(curr_time - start_time - time_spent_rendering)
+
+			if limit and len(times) > limit:
+				times = times[1:]
+
 			for key, val in new_data.items():
 				try:
 					data_points[key]["values"].append(val)
@@ -119,6 +125,9 @@ def render_stdin(config):
 					)
 					print(msg, file=sys.stderr)
 					return 1
+
+				if limit and len(data_points[key]["values"]) > limit:
+					data_points[key]["values"] = data_points[key]["values"][1:]
 
 			if not config["no_refresh"] and \
 				curr_time - prevRenderTime >= config["render_interval"]:

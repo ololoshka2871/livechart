@@ -54,6 +54,11 @@ def parse_args():
 		)
 	)
 
+	parser.add_argument(
+		"-L", "--limit", type=int,
+		help="Limit visible points count to display."
+	)
+
 	args = vars(parser.parse_args())
 	if not args["subplots"]:
 		args["subplots"] = {
