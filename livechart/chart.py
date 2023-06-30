@@ -44,10 +44,10 @@ def configure_pyplot():
 	pyplot.ion()
 	pyplot.xlabel("time (seconds)")
 	canvas = pyplot.gcf().canvas
-	canvas.set_window_title("livechart")
+	canvas.manager.set_window_title("livechart")
 	canvas.mpl_connect("close_event", handle_close)
 
-def render_stdin(config):
+def render_file(file, config):
 	"""
 	Continuously read in data from stdin, parse it using `parse_json()`, and
 	update the matplotlib plot with `render_data_points()`. Accepts a `config`
@@ -58,7 +58,17 @@ def render_stdin(config):
 	times = [0]
 
 	data_points = {}
-	line = sys.stdin.readline().rstrip("\n")
+	line = file.readline().rstrip("\n")
+
+	# Remove BOMs if present.
+	ch0 = ord(line[0])
+	if ch0 == 0xfebbbf:
+		line = line[1:]
+	if ch0 == 0xfeff or ch0 == 0xfffe:
+		line = line[1:]
+
+	print(f"Rendering {line}", file=sys.stderr)
+
 	initial_data = parse_json(line)
 	if initial_data is None:
 		print("No valid data detected in first line of STDIN.", file=sys.stderr)
@@ -107,6 +117,9 @@ def render_stdin(config):
 
 	while line:
 		new_data = parse_json(line.rstrip("\n"))
+	
+		print(f"Rendering {line}", file=sys.stderr)
+
 		if new_data is not None:
 			curr_time = time.time()
 			times.append(curr_time - start_time - time_spent_rendering)

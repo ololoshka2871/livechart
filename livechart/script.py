@@ -85,13 +85,13 @@ def run():
 
 	if sys.stdin.isatty():
 		print(
-			"No STDIN input detected. `livechart --help` for help information.",
+			"No STDIN input detected. `echo {} |livechart --help` for help information.",
 			file=sys.stderr
 		)
 		sys.exit(1)
 
 	chart.configure_pyplot()
 	try:
-		chart.render_stdin(parse_args())
+		chart.render_file(sys.stdin, parse_args())
 	except KeyboardInterrupt:
 		pass
